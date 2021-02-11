@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button>发送请求</button>
+  <button>取消发送请求</button>
+  <button>发送AJAX请求</button>
+  <span></span>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script type="module">
+    const btn = document.getElementsByTagName('button')[0];
+    const btn1 = document.getElementsByTagName('button')[1];
+    const btn2 = document.getElementsByTagName('button')[2];
+    const span = document.getElementsByTagName('span')[0];
+    const xhr = new XMLHttpRequest();
+    // 取消请求
+    btn1.onclick = function(){
+      xhr.abort()
+    }
+    // axios的AJAX请求
+    btn2.onclick = function() {
+      axios({
+        methods: 'POST',
+        url: 'http://127.0.0.1:8000/f',
+        params: {
+          a: 100,
+          b: 200
+        },
+        headers: {
+          name: 'fuheng'
+        },
+        data: {
+          jkl: '3456'
+        }
+      }).then((response)=>{
+        console.log(response)
+      })
+    }
+    btn.addEventListener('click', function(){
+      // 第一个参数为请求类型，第二个参数为请求的URL
+      xhr.open('POST', 'http://127.0.0.1:8000/f?a=4556')
+      // 设置请求超时时间为三秒
+      xhr.timeout = 3000
+      // 用设置好的请求类型向设置好的URL发送请求
+      xhr.send()
+      // 当准备状态改变时
+      xhr.onreadystatechange = function(){
+        // readyState === 0 时为默认
+        // readyState === 1 时为设置了请求类型和URL
+        // readyState === 2 时为发送了请求
+        // readyState === 3 时为获取了一部分响应体
+        // readyState === 4 时为完全获取了响应体
+        // 当准备状态为获取所有响应体的时候
+        if(xhr.readyState === 4){
+          if(xhr.status >= 200 || xhr.status < 300){
+            span.innerText = xhr.responseText
+          }
+        }
+      }
+    })
+  </script>
+</body>
+</html>
